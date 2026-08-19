@@ -3,7 +3,7 @@ resource "azurerm_public_ip" "component" {
   name                = "${each.key}"
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = "static"
+  allocation_method   = "Dynamic"
 }
 
 resource "azurerm_network_interface" "component" {
