@@ -1,8 +1,9 @@
-resource "azurerm_public_ip" "frontend" {
-  name                = "frontend"
+resource "azurerm_public_ip" "component" {
+  for_each = var.components
+  name                = "${each.key}"
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = "Static"
+  allocation_method   = "Dynamic"
 }
 
 resource "azurerm_network_interface" "component" {
