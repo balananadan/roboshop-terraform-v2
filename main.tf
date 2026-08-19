@@ -3,7 +3,7 @@ resource "azurerm_public_ip" "component" {
   name                = "${each.key}"
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = "Dynamic"
+  allocation_method   = "static"
 }
 
 resource "azurerm_network_interface" "component" {
@@ -18,7 +18,7 @@ resource "azurerm_network_interface" "component" {
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
 
-    public_ip_address_id = each.key == "frontend" ? azurerm_public_ip.frontend.id : null
+    public_ip_address_id = azurerm_public_ip.component[each.key].id
   }
 }
 
