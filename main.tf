@@ -1,9 +1,10 @@
 resource "azurerm_public_ip" "component" {
   for_each = var.components
-  name                = "${each.key}"
+
+  name                = "${each.key}-public-ip"
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "component" {
@@ -14,7 +15,7 @@ resource "azurerm_network_interface" "component" {
   resource_group_name = var.resource_group_name
 
   ip_configuration {
-    name                          = "${each.key}-nic"
+    name                          = "${each.key}-ipconfig"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
 
@@ -28,8 +29,10 @@ resource "azurerm_linux_virtual_machine" "component" {
   name                  = "${each.key}-vm"
   location              = var.location
   resource_group_name   = var.resource_group_name
-  network_interface_ids  = [azurerm_network_interface.component[each.key].id]
-  size                  = each.value
+  network_interface_ids  = [
+    azurerm_network_interface.component[each.key].id
+  ]
+  size = each.value
 
   source_image_id = var.image_id
 
